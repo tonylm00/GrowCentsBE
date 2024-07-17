@@ -17,3 +17,12 @@ class BlogPostSchema(ma.Schema):
 
 blog_post_schema = BlogPostSchema()
 blog_posts_schema = BlogPostSchema(many=True)
+
+
+class TradeSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'ticker', 'company', 'unit_price', 'quantity', 'date')
+
+
+trade_schema = TradeSchema()
+trades_schema = TradeSchema(many=True)
