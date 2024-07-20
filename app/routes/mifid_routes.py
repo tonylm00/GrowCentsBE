@@ -4,27 +4,34 @@ bp = Blueprint('mifid', __name__, url_prefix='/mifid')
 
 
 def calculate_risk_profile(answers):
-    score = sum(answers)
+    score = sum(answers.values())
     if score <= 10:
-        return 'Basso', '70% Obbligazioni, 20% Azioni, 10% Liquidità'
+        return 'Basso\n', '\n75% Obbligazioni\n25% Azioni'
     elif score <= 15:
-        return 'Moderato', '50% Obbligazioni, 40% Azioni, 10% Liquidità'
+        return 'Moderato\n', '\n55% Obbligazioni\n45% Azioni'
     elif score <= 20:
-        return 'Medio-Alto', '30% Obbligazioni, 60% Azioni, 10% Liquidità'
+        return 'Medio-Alto\n', '\n35% Obbligazioni\n65% Azioni'
     else:
-        return 'Alto', '10% Obbligazioni, 80% Azioni, 10% Liquidità'
+        return 'Alto\n', '\n10% Obbligazioni\n90% Azioni'
 
 
 @bp.route('/execute', methods=['POST'])
 def execute_mifid():
-    question_1 = request.json['question_1']
-    question_2 = request.json['question_2']
-    question_3 = request.json['question_3']
-    question_4 = request.json['question_4']
-    question_5 = request.json['question_5']
-    question_6 = request.json['question_6']
-
-    answers = [question_1, question_2, question_3, question_4, question_5, question_6]
+    data = request.json
+    answers = {
+        'question_1': data.get('question_1', 0),
+        'question_2': data.get('question_2', 0),
+        'question_3': data.get('question_3', 0),
+        'question_4': data.get('question_4', 0),
+        'question_5': data.get('question_5', 0),
+        'question_6': data.get('question_6', 0),
+        'question_7': data.get('question_7', 0),
+        'question_8': data.get('question_8', 0),
+        'question_9': data.get('question_9', 0),
+        'question_10': data.get('question_10', 0),
+        'question_11': data.get('question_11', 0),
+        'question_12': data.get('question_12', 0),
+    }
     risk_profile, asset_allocation = calculate_risk_profile(answers)
 
     return jsonify(risk_profile, asset_allocation)
