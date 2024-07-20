@@ -18,12 +18,14 @@ def add_blog_post():
     return blog_post_schema.jsonify(new_blog_post)
 
 
+# blog_routes.py
 @bp.route('/', methods=['GET'])
 def get_blog_posts():
     all_blog_posts = BlogPost.query.all()
     result = blog_posts_schema.dump(all_blog_posts)
 
     return jsonify(result)
+
 
 
 @bp.route('/<id>', methods=['GET'])

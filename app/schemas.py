@@ -12,7 +12,7 @@ blog_posts_schema = BlogPostSchema(many=True)
 
 class TradeSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'ticker', 'company', 'unit_price', 'quantity', 'date')
+        fields = ('id', 'ticker', 'company', 'unit_price', 'quantity', 'date', 'type')
 
 
 trade_schema = TradeSchema()
