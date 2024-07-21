@@ -132,3 +132,34 @@ def delete_trade(id):
     except Exception as e:
         logger.error("Error deleting trade: %s", str(e))
         return jsonify({"error": str(e)}), 500
+
+
+@bp.route('/top_assets', methods=['GET'])
+def get_top_assets():
+    try:
+        tickers = ['GOOG', 'AAPL', 'MSFT', 'AMZN', 'TSLA', 'QQQ', 'SPY', 'VWO', 'BND', 'IEF', 'TIPS']
+        assets = []
+
+        for ticker in tickers:
+            company_info = yf.Ticker(ticker).info
+            company_name = company_info.get('shortName', "Unknown")
+            history_data = yf.Ticker(ticker).history(period="1mo")
+            current_price = history_data['Close'].iloc[-1] if not history_data['Close'].empty else 0.0
+            history = history_data.reset_index().to_dict(orient='records') if not history_data.empty else []
+
+            # Formattazione delle date
+            for record in history:
+                record['Date'] = record['Date'].strftime('%Y-%m-%d %H:%M:%S')
+
+            assets.append({
+                'ticker': ticker,
+                'company': company_name,
+                'current_price': current_price,
+                'history': history
+            })
+
+        return jsonify(assets)
+    except Exception as e:
+        logger.error("Error fetching top assets: %s", str(e))
+        return jsonify({"error": str(e)}), 500
+
