@@ -87,6 +87,9 @@ def get_graph_data():
         combined_df = sum(data_frames) / len(data_frames)
         combined_df = combined_df.reset_index()
         combined_df['Date'] = combined_df['Date'].dt.strftime('%Y-%m-%d')
+
+        # Rimuovi righe con valori NaN
+        combined_df = combined_df.dropna(subset=['Close'])
         combined_df = combined_df.to_dict(orient='records')
 
         return jsonify(combined_df)
@@ -143,7 +146,7 @@ def get_top_assets():
         for ticker in tickers:
             company_info = yf.Ticker(ticker).info
             company_name = company_info.get('shortName', "Unknown")
-            history_data = yf.Ticker(ticker).history(period="1mo")
+            history_data = yf.Ticker(ticker).history(period="3mo")
             current_price = history_data['Close'].iloc[-1] if not history_data['Close'].empty else 0.0
             history = history_data.reset_index().to_dict(orient='records') if not history_data.empty else []
 
