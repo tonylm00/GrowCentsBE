@@ -8,16 +8,16 @@ from app.esg.data_preparation.run import merge_by_esg
 
 bp = Blueprint('esg', __name__, url_prefix='/esg')
 
-#path = '../esg/esg_company_data/saved/data_score.pkl'
-path = 'C:\\Users\\Tony\\Desktop\\Growcents\\app\\routes\\model.pkl'
+model_path = 'C:\\Users\\Tony\\Desktop\\Growcents\\app\\routes\\model.pkl'
+dataset_path = 'C:\\Users\\Tony\\Desktop\\Growcents\\app\\esg\\data\\label_with_metrics.csv'
 
 
 def load_model():
     try:
-        print(f"Loading model from: {path}")  # Stampa di debug
-        return joblib.load(path)
+        print(f"Loading model from: {model_path}")  # Stampa di debug
+        return joblib.load(model_path)
     except FileNotFoundError:
-        print(f"Model file not found at: {path}")  # Stampa di debug
+        print(f"Model file not found at: {model_path}")  # Stampa di debug
         return None
 
 
@@ -136,6 +136,23 @@ def predict_data():
     except KeyError as e:
         print(e)
         return jsonify({'error': f'Missing key: {str(e)}'}), 400
+    except Exception as e:
+        print(e)
+        return jsonify({'error': str(e)}), 500
+
+
+@bp.route('/scores', methods=['GET'])
+def get_esg_scores():
+    try:
+        # Lista di ticker per le aziende selezionate
+        selected_companies = ['IBM', 'Microsoft', 'AMD', 'Accenture', 'Google']
+
+        df = pd.read_csv(dataset_path)
+        esg_data = df[df['name'].isin(selected_companies)][['name', 'esg']]
+        esg_data = esg_data.rename(columns={'name': 'company'}).to_dict(orient='records')
+        print('DATI: ', jsonify(esg_data))
+
+        return jsonify(esg_data)
     except Exception as e:
         print(e)
         return jsonify({'error': str(e)}), 500
