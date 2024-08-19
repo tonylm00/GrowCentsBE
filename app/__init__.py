@@ -15,13 +15,14 @@ def create_app():
     ma.init_app(app)
 
     with app.app_context():
-        from .routes import blog_routes, mifid_routes, trade_routes, esg_routes
+        from .routes import blog_routes, mifid_routes, trade_routes, esg_routes, chatbot_routes
         from app.models import add_blog_articles
 
         app.register_blueprint(blog_routes.bp)
         app.register_blueprint(mifid_routes.bp)
         app.register_blueprint(trade_routes.bp)
         app.register_blueprint(esg_routes.bp)
+        app.register_blueprint(chatbot_routes.bp)
 
         db.create_all()
         add_blog_articles()
