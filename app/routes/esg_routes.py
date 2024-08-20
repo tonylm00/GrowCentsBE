@@ -83,6 +83,21 @@ def predict_data():
 
         df = df.rename(columns=column_mappings)
 
+        df = df.rename(columns={
+            'Bevande Alcoliche': 'Alcoholic Beverages',
+            'Intrattenimento per Adulti': 'Adult Entertainment',
+            'Gioco d\'Azzardo': 'Gambling',
+            'Tabacco': 'Tobacco Products',
+            'Test su Animali': 'Animal Testing',
+            'Pelli Pregiate e Pellicce': 'Fur and Specialty Leather',
+            'Armi': 'Controversial Weapons',
+            'OGM': 'GMO',
+            'Contratti Militari': 'Military Contracting',
+            'Pesticidi': 'Pesticides',
+            'Carbone Termico': 'Thermal Coal',
+            'Olio di Palma': 'Palm Oil',
+        })
+
         # Aggiungi valori predefiniti per le colonne sdg_* e Controversies mancanti
         sdg_columns = [
             'sdg_No Poverty', 'sdg_No Hunger', 'sdg_Good Health and Well-Being', 'sdg_Quality Education',
@@ -145,9 +160,11 @@ def predict_data():
 def get_esg_scores():
     try:
         # Lista di ticker per le aziende selezionate
-        selected_companies = ['IBM', 'Microsoft', 'AMD', 'Accenture', 'Google']
+        # selected_companies = ['IBM', 'Microsoft', 'AMD', 'Accenture', 'Google', 'Dell']
 
         df = pd.read_csv(dataset_path)
+        selected_companies = df['name'].unique()
+
         esg_data = df[df['name'].isin(selected_companies)][['name', 'esg']]
         esg_data = esg_data.rename(columns={'name': 'company'}).to_dict(orient='records')
         print('DATI: ', jsonify(esg_data))

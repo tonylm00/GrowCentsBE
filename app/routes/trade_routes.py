@@ -100,6 +100,7 @@ def get_graph_data():
 
 @bp.route('/supported_tickers', methods=['GET'])
 def get_supported_tickers():
+    """
     try:
         tickers = Asset.STOCKS + Asset.ETFS + Asset.BONDS
         ticker_with_names = {ticker: get_company_name(ticker) for ticker in tickers}
@@ -107,7 +108,8 @@ def get_supported_tickers():
     except Exception as e:
         logger.error("Error getting supported tickers: %s", str(e))
         return jsonify({"error": str(e)}), 500
-
+    """
+    return Asset.ticker_with_names
 
 @bp.route('/current_price', methods=['GET'])
 def get_current_price():
@@ -169,10 +171,11 @@ def get_top_assets():
 
 @bp.route('/asset_details/<string:ticker>', methods=['GET'])
 def get_asset_details(ticker):
+    period = request.args.get('period', '1mo')
     try:
         company_info = yf.Ticker(ticker).info
         company_name = company_info.get('shortName', "Unknown")
-        history_data = yf.Ticker(ticker).history(period="1mo")
+        history_data = yf.Ticker(ticker).history(period=period)  # Usa il periodo nella richiesta
         current_price = history_data['Close'].iloc[-1] if not history_data['Close'].empty else 0.0
         history = history_data.reset_index().to_dict(orient='records') if not history_data.empty else []
 
@@ -191,3 +194,4 @@ def get_asset_details(ticker):
     except Exception as e:
         logger.error("Error fetching asset details for %s: %s", ticker, str(e))
         return jsonify({"error": str(e)}), 500
+
