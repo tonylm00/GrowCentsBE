@@ -174,8 +174,21 @@ def get_asset_details(ticker):
     period = request.args.get('period', '1mo')
     try:
         company_info = yf.Ticker(ticker).info
-        company_name = company_info.get('shortName', "Unknown")
-        history_data = yf.Ticker(ticker).history(period=period)  # Usa il periodo nella richiesta
+        print(company_info)
+        company_name = company_info.get('shortName', "N/A")
+        city = company_info.get('city', "N/A")
+        country = company_info.get('country', "N/A")
+        zip_code = company_info.get('zip', "N/A")
+        sector = company_info.get('sector', "N/A")
+        industry = company_info.get('industry', "N/A")
+        full_time_employees = company_info.get('fullTimeEmployees', "N/A")
+        company_officers = company_info.get('companyOfficers', [])
+        audit_risk = company_info.get('auditRisk', "N/A")
+        board_risk = company_info.get('boardRisk', "N/A")
+        financial_currency = company_info.get('financialCurrency', "N/A")
+        long_business_summary = company_info.get('longBusinessSummary', "N/A")
+
+        history_data = yf.Ticker(ticker).history(period=period)
         current_price = history_data['Close'].iloc[-1] if not history_data['Close'].empty else 0.0
         history = history_data.reset_index().to_dict(orient='records') if not history_data.empty else []
 
@@ -187,7 +200,18 @@ def get_asset_details(ticker):
             'ticker': ticker,
             'company': company_name,
             'current_price': current_price,
-            'history': history
+            'history': history,
+            'city': city,
+            'country': country,
+            'zip': zip_code,
+            'sector': sector,
+            'industry': industry,
+            'fullTimeEmployees': full_time_employees,
+            'companyOfficers': company_officers,
+            'auditRisk': audit_risk,
+            'boardRisk': board_risk,
+            'financialCurrency': financial_currency,
+            'longBusinessSummary': long_business_summary
         }
 
         return jsonify(asset_details)
