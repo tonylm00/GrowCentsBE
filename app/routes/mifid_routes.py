@@ -6,13 +6,13 @@ bp = Blueprint('mifid', __name__, url_prefix='/mifid')
 def calculate_risk_profile(answers):
     score = sum(answers.values())
     if score <= 10:
-        return 'Basso\n', '\n75% Obbligazioni\n25% Azioni'
+        return 'Basso\n', '\n75% Obbligazioni\n25% Azioni\n\nDisclaimer: Questo profilo di rischio e questa allocazione degli asset non sono consigli finanziari. È importante consultare un consulente finanziario per adattare la strategia di investimento alle proprie esigenze e circostanze individuali.'
     elif score <= 15:
-        return 'Moderato\n', '\n55% Obbligazioni\n45% Azioni'
+        return 'Moderato\n', '\n55% Obbligazioni\n45% Azioni\n\nDisclaimer: Questo profilo di rischio e questa allocazione degli asset non sono consigli finanziari. È importante consultare un consulente finanziario per adattare la strategia di investimento alle proprie esigenze e circostanze individuali.'
     elif score <= 20:
-        return 'Medio-Alto\n', '\n35% Obbligazioni\n65% Azioni'
+        return 'Medio-Alto\n', '\n35% Obbligazioni\n65% Azioni\n\nDisclaimer: Questo profilo di rischio e questa allocazione degli asset non sono consigli finanziari. È importante consultare un consulente finanziario per adattare la strategia di investimento alle proprie esigenze e circostanze individuali.'
     else:
-        return 'Alto\n', '\n10% Obbligazioni\n90% Azioni'
+        return 'Alto\n', '\n10% Obbligazioni\n90% Azioni\n\nDisclaimer: Questo profilo di rischio e questa allocazione degli asset non sono consigli finanziari. È importante consultare un consulente finanziario per adattare la strategia di investimento alle proprie esigenze e circostanze individuali.'
 
 
 @bp.route('/execute', methods=['POST'])
